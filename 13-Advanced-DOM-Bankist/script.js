@@ -15,16 +15,22 @@ const closeModal = function () {
 };
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+const header = document.querySelector('.header');
+const allSections = document.querySelectorAll('.section');
+const message = document.createElement('div');
+const logo = document.querySelector('.nav__logo');
+const h1 = document.querySelector('h1');
+const nav = document.querySelector('.nav');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
 
 ///////////////////////////////////////
 // Modal window
-
 //equivalent to: for (let i = 0; i < btnsOpenModal.length; i++) btnsOpenModal[i].addEventListener('click', openModal);
 btnsOpenModal.forEach((btn) => btn.addEventListener('click', openModal));
-
 btnCloseModal.addEventListener('click', closeModal);
 overlay.addEventListener('click', closeModal);
-
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
     closeModal();
@@ -35,15 +41,12 @@ console.log(document.documentElement); //documentElement = the whole HTML elemen
 console.log(document.head);
 console.log(document.body);
 
-const header = document.querySelector('.header');
-const allSections = document.querySelectorAll('.section');
 console.log('allSections = ', allSections);
 const allButtons = document.getElementsByTagName('button');
 console.log('allButtons = ', allButtons);
 console.log(document.getElementsByClassName('btn'));
 
 // creating and inserting elements
-const message = document.createElement('div');
 message.classList.add('cookie-message');
 // message.textContent = 'We use cookies for improved functionality and analytics.';
 message.innerHTML = 'We use cookies for improved functionality and analytics. <buton class="btn btn--close--cookie">Got it!</button>';
@@ -81,7 +84,6 @@ message.style.height = Number.parseFloat(getComputedStyle(message).height, 10) +
 document.documentElement.style.setProperty('--color-primary', 'rgb(156,218,147)');
 
 // Attributes (elements that go into the tags <>)
-const logo = document.querySelector('.nav__logo');
 console.log(logo.src);
 console.log(logo.className);
 
@@ -152,8 +154,6 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
   }
 });
 
-const h1 = document.querySelector('h1');
-
 // Going downwards: child
 console.log(h1.querySelectorAll('.highlight'));
 console.log('childNodes:', h1.childNodes);
@@ -175,11 +175,6 @@ console.log(h1.parentElement.children);
 // [...h1.parentElement.children].forEach(function (el) {
 //   if (el !== h1) el.style.transform = 'scale(0.5)';
 // });
-
-// Tabbed component
-const tabs = document.querySelectorAll('.operations__tab');
-const tabsContainer = document.querySelector('.operations__tab-container');
-const tabsContent = document.querySelectorAll('.operations__content');
 
 // tabs.forEach((t) => t.addEventListener('click', () => console.log('TAB')));
 tabsContainer.addEventListener('click', (e) => {
@@ -243,3 +238,19 @@ document.querySelector('.nav').addEventListener('click', function (e) {
   this.style.backgroundColor = randomColor();
   console.log('NAV', e.target, e.currentTarget);
 });
+
+// Menu fade animation
+const handleHover = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+    siblings.forEach((el) => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseout', handleHover.bind(1));
