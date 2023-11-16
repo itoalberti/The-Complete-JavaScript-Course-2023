@@ -1,0 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(92, 166, 168);
+  font-family: Arial;
+  font-size: 20px;
+  padding: 30px;
+}
+
+/* affects only h1 properties */
+h1 {
+  font-size: 30px;
+  padding-bottom: 25px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+/* affects everything with class 'first' */
+.first {
+  color: rgb(226, 11, 11);
+}
+
+/* to change properties of id, use # */
+#your-name {
+  background-color: rgb(255, 240, 26);
+  border: 5px solid rgb(247, 25, 217);
+  width: 600px;
+  padding: 25px;
+  margin-top: 30px;
+}
+
+input,
+button {
+  padding: 10px;
+  font-size: 16px;
+}
+
+a {
+  background-color: rgb(245, 116, 245);
+}
