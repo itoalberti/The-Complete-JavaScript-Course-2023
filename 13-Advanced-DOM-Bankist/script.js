@@ -68,7 +68,7 @@ document.querySelector('.btn--close--cookie').addEventListener('click', function
 
 // Styles
 message.style.backgroundColor = '#37383d';
-message.style.width = '120%';
+message.style.width = '100%';
 
 console.log('height:', message.style.height); //doesn't work, because the console.log prints only properties defined with style
 console.log('backgroundColor:', message.style.backgroundColor);
@@ -309,7 +309,7 @@ const sectionObserver = new IntersectionObserver(revealSection, {
 
 allSections.forEach(function (section) {
   sectionObserver.observe(section);
-  section.classList.add('section--hidden');
+  // section.classList.add('section--hidden');
 });
 
 // Lazy loading images
@@ -334,6 +334,52 @@ const loadImg = function (entries, observer) {
 const imgObserver = new IntersectionObserver(loadImg, {
   root: null,
   threshold: 0,
+  rootMargin: '200px',
 });
 
 imgTargets.forEach((img) => imgObserver.observe(img));
+
+// Slider
+const slides = document.querySelectorAll('.slide');
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+let curSlide = 0;
+const maxSlide = slides.length;
+
+// const slider = document.querySelector('.slider');
+// slider.style.transform = 'scale(1) translateX(-800px)';
+// slider.style.overflow = 'visible';
+
+// 0%, 100%, 200%, 300%
+const goToslide = function (slide) {
+  slides.forEach((s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`));
+};
+goToslide(0);
+
+// Next slide
+const nextSlide = function () {
+  if (curSlide === maxSlide - 1) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+  goToslide(curSlide);
+};
+
+// Previous slide
+const prevslide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide - 1;
+  } else {
+    curSlide--;
+  }
+  goToslide(curSlide);
+};
+
+btnRight.addEventListener('click', nextSlide);
+btnLeft.addEventListener('click', prevslide);
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowLeft') prevslide;
+  if (e.key === 'ArrowRight') nextSlide;
+});
