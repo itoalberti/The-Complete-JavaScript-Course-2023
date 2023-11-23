@@ -38,6 +38,7 @@ const alertH1 = (e) => {
 };
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 const randomColor = () => `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+
 //-----------------MENU FADE ANIMATION-----------------
 const handleHover = function (e) {
   if (e.target.classList.contains('nav__link')) {
@@ -400,19 +401,19 @@ allSections.forEach(function (section) {
 
 imgTargets.forEach((img) => imgObserver.observe(img));
 
-// let curSlide = 0;
-// btnRight.addEventListener('click', nextSlide);
-// btnLeft.addEventListener('click', prevslide);
+// DOMContentLoaded: event is fired only after all the HTML is downloaded
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log('HTML parsed and DOM tree built', e);
+});
 
-// document.addEventListener('keydown', function (e) {
-//   if (e.key === 'ArrowLeft') prevslide();
-//   e.key === 'ArrowRight' && nextSlide();
-// });
+// load: fired by the window as soon as not only the HTML is parsed, but also all other elements (CSS, etc) are fully loaded.
+window.addEventListener('load', function (e) {
+  console.log('Page fully loaded', e);
+});
 
-// dotContainer.addEventListener('click', function (e) {
-//   if (e.target.classList.contains('dots__dot')) {
-//     const { slide } = e.target.dataset;
-//     goToslide(slide);
-//     activateDot(slide);
-//   }
-// });
+// beforeunload:fired immediately before the user leaves the page or reloads it
+window.addEventListener('beforeunload', function (e) {
+  e.preventDefault();
+  console.log(e);
+  e.returnValue = '';
+});
