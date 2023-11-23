@@ -1,5 +1,6 @@
 'use strict';
 
+// -----------------CONSTANTS-----------------
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
@@ -24,9 +25,121 @@ const nav = document.querySelector('.nav');
 const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
+const allButtons = document.getElementsByTagName('button');
+const link = document.querySelector('.nav__link--btn');
+const alertH1 = (e) => {
+  alert('addEventListener: Great! You are reading the heading!');
+  // h1.removeEventListener('mouseenter', alertH1);
+};
+const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+const randomColor = () => `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+// Menu fade animation
+const handleHover = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+    siblings.forEach((el) => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+const navHeight = nav.getBoundingClientRect().height;
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  console.log(entry);
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  // console.log('entry', entry);
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+// Lazy loading images
+const imgTargets = document.querySelectorAll('img[data-src]');
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+  console.log('entry:', entry);
 
-///////////////////////////////////////
-// Modal window
+  if (!entry.isIntersecting) return;
+
+  // Replace src with data-src
+  entry.target.src = entry.target.dataset.src;
+
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+
+  observer.unobserve(entry.target);
+};
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px',
+});
+// Slider
+const slides = document.querySelectorAll('.slide');
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+const maxSlide = slides.length;
+// 0%, 100%, 200%, 300%
+const goToslide = function (slide) {
+  slides.forEach((s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`));
+};
+// Next slide
+const nextSlide = function () {
+  if (curSlide === maxSlide - 1) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+  goToslide(curSlide);
+  activateDot(curSlide);
+};
+// Previous slide
+const prevslide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide - 1;
+  } else {
+    curSlide--;
+  }
+  goToslide(curSlide);
+  activateDot(curSlide);
+};
+const dotContainer = document.querySelector('.dots');
+const createDots = function () {
+  slides.forEach(function (_, index) {
+    dotContainer.insertAdjacentHTML('beforeend', `<button class="dots__dot" data-slide="${index}"></button>`);
+  });
+};
+
+const activateDot = function (slide) {
+  document.querySelectorAll('.dots__dot').forEach((dot) => dot.classList.remove('dots__dot--active'));
+  document.querySelector(`.dots__dot[data-slide="${slide}"]`).classList.add('dots__dot--active');
+};
+const init = function () {
+  goToslide(0);
+  createDots();
+  activateDot(0);
+};
+
+// -----------------INITIALIZE WEBSITE-----------------
+init();
+
+// -----------------MODAL WINDOW-----------------
 //equivalent to: for (let i = 0; i < btnsOpenModal.length; i++) btnsOpenModal[i].addEventListener('click', openModal);
 btnsOpenModal.forEach((btn) => btn.addEventListener('click', openModal));
 btnCloseModal.addEventListener('click', closeModal);
@@ -40,9 +153,7 @@ document.addEventListener('keydown', function (e) {
 console.log(document.documentElement); //documentElement = the whole HTML element in the index.html file
 console.log(document.head);
 console.log(document.body);
-
 console.log('allSections = ', allSections);
-const allButtons = document.getElementsByTagName('button');
 console.log('allButtons = ', allButtons);
 console.log(document.getElementsByClassName('btn'));
 
@@ -51,9 +162,9 @@ message.classList.add('cookie-message');
 // message.textContent = 'We use cookies for improved functionality and analytics.';
 message.innerHTML = 'We use cookies for improved functionality and analytics. <buton class="btn btn--close--cookie">Got it!</button>';
 
-// prepend adds the element message as the first child of the header element
+// prepend: adds the element message as the first child of the header element
 header.prepend(message);
-// append adds the element message as the last child of the header element
+// append: adds the element message as the last child of the header element
 header.append(message);
 
 // Inserts message before and after header
@@ -70,9 +181,9 @@ document.querySelector('.btn--close--cookie').addEventListener('click', function
 message.style.backgroundColor = '#37383d';
 message.style.width = '100%';
 
-console.log('height:', message.style.height); //doesn't work, because the console.log prints only properties defined with style
+// console.log('height:', message.style.height); //doesn't work, because the console.log prints only properties defined with style
 console.log('backgroundColor:', message.style.backgroundColor);
-// getComputedStyle solves the issue and prints the properties that were defined in the CSS file:
+// getComputedStyle: solves the issue and prints the properties that were defined in the CSS file:
 console.log('color', getComputedStyle(message).color);
 console.log('height', getComputedStyle(message).height);
 
@@ -84,8 +195,8 @@ message.style.height = Number.parseFloat(getComputedStyle(message).height, 10) +
 document.documentElement.style.setProperty('--color-primary', 'rgb(156,218,147)');
 
 // Attributes (elements that go into the tags <>)
-console.log(logo.src);
-console.log(logo.className);
+console.log('logo.src:', logo.src);
+console.log('logo.className:', logo.className);
 
 // Non-standard attributes
 console.log(logo.designer); //results in nothing, therefore the 'getAttribute' string must be used
@@ -94,7 +205,6 @@ logo.setAttribute('company', 'Bankist');
 console.log(logo.src);
 console.log(logo.getAttribute('src'));
 
-const link = document.querySelector('.nav__link--btn');
 console.log(link.href); //shows the link as it is
 console.log(link.getAttribute('href')); //shows the link as it was written in the 'href' element in the HTML file
 
@@ -143,7 +253,6 @@ btnScrollTo.addEventListener('click', (e) => {
 
 // 1. Add event listener to common parent element
 // 2. Determine what element originated the event
-
 document.querySelector('.nav__links').addEventListener('click', function (e) {
   e.preventDefault();
   // Matching strategy
@@ -206,20 +315,12 @@ tabsContainer.addEventListener('click', (e) => {
 //   alert('onmouseenter: Great! You are reading the heading!');
 // };
 
-const alertH1 = (e) => {
-  alert('addEventListener: Great! You are reading the heading!');
-  // h1.removeEventListener('mouseenter', alertH1);
-};
-
 h1.addEventListener('mouseenter', alertH1);
 
 // to remove the event listener that shows the alert:
 // setTimeout(() => {
 //   h1.removeEventListener('mouseenter', alertH1), 3000;
 // });
-
-const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
-const randomColor = () => `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
 
 document.querySelector('.nav__link').addEventListener('click', function (e) {
   this.style.backgroundColor = randomColor();
@@ -238,19 +339,6 @@ document.querySelector('.nav').addEventListener('click', function (e) {
   this.style.backgroundColor = randomColor();
   console.log('NAV', e.target, e.currentTarget);
 });
-
-// Menu fade animation
-const handleHover = function (e) {
-  if (e.target.classList.contains('nav__link')) {
-    const link = e.target;
-    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
-    const logo = link.closest('.nav').querySelector('img');
-    siblings.forEach((el) => {
-      if (el !== link) el.style.opacity = this;
-    });
-    logo.style.opacity = this;
-  }
-};
 
 // Passing "argument" into handler
 nav.addEventListener('mouseover', handleHover.bind(0.5));
@@ -275,111 +363,40 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 // };
 // const observer = new IntersectionObserver(obsCallback, obsOptions);
 // observer.observe(section1);
-const navHeight = nav.getBoundingClientRect().height;
+
 console.log('nav', nav);
-
-const stickyNav = function (entries) {
-  const [entry] = entries;
-  console.log(entry);
-  if (!entry.isIntersecting) nav.classList.add('sticky');
-  else nav.classList.remove('sticky');
-};
-
 console.log('navHeight', navHeight);
-const headerObserver = new IntersectionObserver(stickyNav, {
-  root: null,
-  threshold: 0,
-  rootMargin: `-${navHeight}px`,
-});
 headerObserver.observe(header);
 
 // Reveal sections
 // const allSections = document.querySelectorAll('.section');
-const revealSection = function (entries, observer) {
-  const [entry] = entries;
-  // console.log('entry', entry);
-  if (!entry.isIntersecting) return;
-  entry.target.classList.remove('section--hidden');
-  observer.unobserve(entry.target);
-};
-const sectionObserver = new IntersectionObserver(revealSection, {
-  root: null,
-  threshold: 0.15,
-});
 
 allSections.forEach(function (section) {
   sectionObserver.observe(section);
   // section.classList.add('section--hidden');
 });
 
-// Lazy loading images
-const imgTargets = document.querySelectorAll('img[data-src]');
-
-const loadImg = function (entries, observer) {
-  const [entry] = entries;
-  console.log('entry:', entry);
-
-  if (!entry.isIntersecting) return;
-
-  // Replace src with data-src
-  entry.target.src = entry.target.dataset.src;
-
-  entry.target.addEventListener('load', function () {
-    entry.target.classList.remove('lazy-img');
-  });
-
-  observer.unobserve(entry.target);
-};
-
-const imgObserver = new IntersectionObserver(loadImg, {
-  root: null,
-  threshold: 0,
-  rootMargin: '200px',
-});
-
 imgTargets.forEach((img) => imgObserver.observe(img));
 
-// Slider
-const slides = document.querySelectorAll('.slide');
-const btnLeft = document.querySelector('.slider__btn--left');
-const btnRight = document.querySelector('.slider__btn--right');
 let curSlide = 0;
-const maxSlide = slides.length;
 
-// const slider = document.querySelector('.slider');
-// slider.style.transform = 'scale(1) translateX(-800px)';
-// slider.style.overflow = 'visible';
-
-// 0%, 100%, 200%, 300%
-const goToslide = function (slide) {
-  slides.forEach((s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`));
-};
 goToslide(0);
-
-// Next slide
-const nextSlide = function () {
-  if (curSlide === maxSlide - 1) {
-    curSlide = 0;
-  } else {
-    curSlide++;
-  }
-  goToslide(curSlide);
-};
-
-// Previous slide
-const prevslide = function () {
-  if (curSlide === 0) {
-    curSlide = maxSlide - 1;
-  } else {
-    curSlide--;
-  }
-  goToslide(curSlide);
-};
+goToslide(curSlide);
 
 btnRight.addEventListener('click', nextSlide);
 btnLeft.addEventListener('click', prevslide);
 
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'ArrowLeft') prevslide;
-  if (e.key === 'ArrowRight') nextSlide;
+  if (e.key === 'ArrowLeft') prevslide();
+  e.key === 'ArrowRight' && nextSlide();
+});
+
+activateDot(0);
+
+dotContainer.addEventListener('click', function (e) {
+  if (e.target.classList.contains('dots__dot')) {
+    const { slide } = e.target.dataset;
+    goToslide(slide);
+    activateDot(slide);
+  }
 });
