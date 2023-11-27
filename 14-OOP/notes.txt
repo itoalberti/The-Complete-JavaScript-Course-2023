@@ -1,0 +1,21 @@
+Classes:
+    A primordial form from which we can create new objects
+    Every new object of that class will be an instance of the class
+
+Four fundamental principles of OOP:
+→ Abstraction:
+    Ignoring or hiding details that don't matter, allowing the user to have an overview perspective of the thing we're implementing
+→ Encapsulation
+    Keeping properties and methods private inside the class, unaccessible from outisde. This prevents external code from manipulating internal properties/states.
+    Some methods can be exposed as public interface (API)
+→ Inheritance
+    One class inherits the methods/properties of another, and adds up some other ones from itself
+    E.g.:
+    class user (username/password/email)
+    class admin (username/password/email/permissions)
+    admin is the child class that inherits the properties of user
+Polymorphism
+    A child class overwrites a method inherited by the parent class
+    e.g.:
+    class author: (user/password/email/posts)
+    password, different from user and admin, must be 11 characters long and have special characters
