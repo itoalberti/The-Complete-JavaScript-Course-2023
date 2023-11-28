@@ -21,13 +21,13 @@ const Car = function (make, speed) {
 // 2. Implement an 'accelerate' method that will increase the car's speed by 10, and log the new speed to the console
 Car.prototype.accelerate = function () {
   this.speed += 10;
-  console.log(`[accelerate]: ${this.speed} km/h`);
+  console.log(`${this.make} is going at ${this.speed} km/h`);
 };
 
 // 3. Implement a 'brake' method that will decrease the car's speed by 5, and log the new speed to the console
 Car.prototype.brake = function () {
   this.speed -= 5;
-  console.log(`[brake]: ${this.speed} km/h`);
+  console.log(`${this.make} is going at ${this.speed} km/h`);
 };
 
 const car1 = new Car('BMW', 120);
