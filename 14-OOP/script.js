@@ -19,8 +19,6 @@ const PersonFn = function (firstName, birthYear) {
 // 2. function is called, 'this' keyword is the new {} object
 // 3. {} is linked to the prototype
 // 4. function automatically returns {} object (which may no longer be empty)
-const tenorio = new PersonFn('Tenório', 1976);
-console.log('tenorio:', tenorio);
 
 // Prototypes
 PersonFn.prototype.calcAge = function () {
@@ -28,6 +26,8 @@ PersonFn.prototype.calcAge = function () {
   return 2023 - this.birthYear;
 };
 
+const tenorio = new PersonFn('Tenório', 1976);
+console.log('tenorio:', tenorio);
 console.log(tenorio.calcAge());
 console.log(tenorio.__proto__);
 
@@ -133,3 +133,29 @@ console.log(jerusa);
 jerusa.birthYear = 1965;
 console.log(jerusa);
 jerusa.calcAge;
+
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+Person.prototype.calcAge = function () {
+  console.log(2023 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  // Best practice is to use 'call', so if 'Person' changes in the future, the changes will be carried down to 'Student'
+  Person.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+// Linking prototypes, so Student will inherit Person's methods
+Student.prototype = Object.create(Person.prototype);
+// now, a new Student will be an instance of Person too
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.firstName} and my major is ${this.course}`);
+};
+
+const leonard = new Student('Leonard', 1989, 'Physics');
+leonard.introduce();
+leonard.calcAge();
