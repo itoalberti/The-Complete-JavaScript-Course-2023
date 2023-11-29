@@ -1,7 +1,7 @@
 'use strict';
 
 // convention: constructor functions always start with capital letters
-const Person = function (firstName, birthYear) {
+const PersonFn = function (firstName, birthYear) {
   // Instance properties:
   this.firstName = firstName;
   this.birthYear = birthYear;
@@ -19,11 +19,11 @@ const Person = function (firstName, birthYear) {
 // 2. function is called, 'this' keyword is the new {} object
 // 3. {} is linked to the prototype
 // 4. function automatically returns {} object (which may no longer be empty)
-const tenorio = new Person('Tenório', 1976);
+const tenorio = new PersonFn('Tenório', 1976);
 console.log('tenorio:', tenorio);
 
 // Prototypes
-Person.prototype.calcAge = function () {
+PersonFn.prototype.calcAge = function () {
   //   console.log(2023 - this.birthYear);
   return 2023 - this.birthYear;
 };
@@ -31,7 +31,7 @@ Person.prototype.calcAge = function () {
 console.log(tenorio.calcAge());
 console.log(tenorio.__proto__);
 
-Person.prototype.species = 'Homo Sapiens';
+PersonFn.prototype.species = 'Homo Sapiens';
 console.log(tenorio.species);
 console.log(tenorio.hasOwnProperty('firstName'));
 console.log(tenorio.hasOwnProperty('species'));
@@ -44,3 +44,92 @@ console.log(arr.__proto__);
 Array.prototype.unique = function () {
   return [...new Set(this)];
 };
+
+// ________________________CLASSES________________________
+// 1. Classes are not hoisted (they HAVE to be declared before being used)
+// 2. Classes are first-class citizens: we can pass them into functions into functions and return them from functions
+// 3. Classes are always executed in strict mode
+
+// _________________________CLASS EXAMPLE_________________________BEGINNING
+// class Person {
+//   constructor(firstName, lastName) {
+//     this.firstName = firstName;
+//     this.lastName = lastName;
+//   }
+
+//   get fullName() {
+//     return `${this.firstName} + ${this.lastName}`;
+//   }
+
+//   set fullName(name) {
+//     const names = name.split(' ');
+//     this.firstName = names[0];
+//     this.lastName = names[1];
+//   }
+// }
+
+// const person = new Person('Benicio', 'Gonzalez');
+// console.log(person);
+// person.fullName = 'Miguel Velazquez';
+// console.log(person);
+// _________________________CLASS EXAMPLE_________________________END
+
+class PersonCl {
+  // First step in creating a class is to create a constructor
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+  // Methods will be added to .prototype property
+  calcAge() {
+    console.log(2023 - this.birthYear);
+  }
+  greet() {
+    console.log(`Hello ${this.firstName}!`);
+  }
+  // GETTERS AND SETTERS
+  // They can be very useful for data validation
+  // get: ACCESS properties from the inside
+  get age() {
+    return 2023 - this.birthYear;
+  }
+  // set: CHANGE properties from the outside
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name`);
+    // the variable _fullName will be recorded in the get method below
+  }
+  get fullName() {
+    return this._fullName;
+  }
+
+  // Static methods are not accessible by the instances of the class
+  // They can be accessed only by the class itself
+  static hey() {
+    console.log('Hello there!');
+  }
+}
+
+const benicio = new PersonCl('Benicio Gonzalez', 1976);
+console.log(benicio);
+benicio.calcAge();
+console.log(benicio.age);
+console.log(benicio.fullName);
+PersonCl.hey();
+
+const PersonProto = {
+  calcAge() {
+    console.log(2023 - this.birthYear);
+  },
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const jerusa = Object.create(PersonProto);
+console.log(jerusa);
+// jerusa.name = 'Jerusa';
+jerusa.birthYear = 1965;
+console.log(jerusa);
+jerusa.calcAge;
