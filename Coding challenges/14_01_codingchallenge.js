@@ -30,16 +30,16 @@ Car.prototype.brake = function () {
   console.log(`${this.make} is going at ${this.speed} km/h`);
 };
 
-const car1 = new Car('BMW', 120);
-console.log(`CAR 1: ${car1.make}`);
-car1.accelerate();
-car1.brake();
-car1.accelerate();
-car1.brake();
-car1.accelerate();
-car1.accelerate();
-car1.brake();
-car1.brake();
+const car = new Car('BMW', 120);
+console.log(`CAR 1: ${car.make}`);
+car.accelerate();
+car.brake();
+car.accelerate();
+car.brake();
+car.accelerate();
+car.accelerate();
+car.brake();
+car.brake();
 
 const car2 = new Car('Mercedes', 95);
 console.log(`CAR 2: ${car2.make}`);
