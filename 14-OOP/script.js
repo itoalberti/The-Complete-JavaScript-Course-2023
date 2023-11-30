@@ -110,10 +110,32 @@ class PersonCl {
   }
 }
 
+class StudentCl extends PersonCl {
+  // It is necessary to repeat all the parameters of the parent class
+  constructor(fullName, birthYear, course) {
+    // super: this is the constructor function of the parent class
+    super(fullName, birthYear);
+    this.course = course;
+  }
+
+  // this calcAge method overrides the previously declared calcAge because it was introduced later in the prototype chain
+  calcAge() {
+    console.log(`My name is ${this.fullName} and I am a ${2023 - this.birthYear}-year old student`);
+  }
+
+  introduce() {
+    console.log(`Hello! My name is ${this.fullName}`);
+  }
+}
+
+const jacira = new StudentCl('Jacira Mascarenhas', 1998, 'Philosophy');
+console.log(jacira);
+jacira.calcAge();
+jacira.introduce();
+
 const benicio = new PersonCl('Benicio Gonzalez', 1976);
 console.log(benicio);
 benicio.calcAge();
-console.log(benicio.age);
 console.log(benicio.fullName);
 PersonCl.hey();
 
@@ -159,3 +181,53 @@ Student.prototype.introduce = function () {
 const leonard = new Student('Leonard', 1989, 'Physics');
 leonard.introduce();
 leonard.calcAge();
+
+class Account {
+  // 1. Public fields (instances)
+  locale = navigator.language;
+
+  // 2. Private fields
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+    // underscore is a convention to make properties protected/private
+    // this._movements = [10, 20, 500, 75];
+    this.movements = [10, 20, 500, 75];
+    console.log(`Thanks for opening an account, ${this.owner}`);
+  }
+
+  // 3. Public methods
+
+  // Public interface
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+  }
+  withdraw(val) {
+    this.deposit(-val);
+  }
+  _approveLoan(val) {
+    return true;
+  }
+  requestLoan(val) {
+    if (this._approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan of ${this.val} approved`);
+    }
+  }
+}
+
+const acc1 = new Account('Bruno', 'EUR', 1234);
+console.log(acc1);
+acc1.deposit(55);
+acc1.withdraw(250);
+acc1.requestLoan(6000);
+console.log(acc1);
+console.log(acc1.getMovements());
