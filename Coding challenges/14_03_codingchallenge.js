@@ -17,7 +17,8 @@ const Car = function (make, speed) {
   this.speed = speed;
 };
 Car.prototype.accelerate = function () {
-  return (this.speed += 10);
+  this.charge--;
+  return (this.speed += 20);
 };
 Car.prototype.brake = function () {
   return (this.speed -= 5);
@@ -31,7 +32,22 @@ const EV = function (make, speed, charge) {
 EV.prototype = Object.create(Car.prototype);
 EV.prototype.chargeBattery = function (chargeTo) {
   this.charge = chargeTo;
+  return this.charge;
 };
 
 const tesla = new EV('Tesla', 130, 45);
 console.log(tesla);
+console.log(tesla.brake());
+console.log(tesla.charge);
+console.log(tesla.brake());
+console.log(tesla.charge);
+console.log(tesla.accelerate());
+console.log(tesla.accelerate());
+console.log(tesla.charge);
+console.log(tesla.chargeBattery(90));
+console.log(tesla.accelerate());
+console.log(tesla.accelerate());
+console.log(tesla.charge);
+console.log(tesla.brake());
+console.log(tesla.charge);
+console.log(tesla.accelerate());
