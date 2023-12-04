@@ -182,11 +182,17 @@ const leonard = new Student('Leonard', 1989, 'Physics');
 leonard.introduce();
 leonard.calcAge();
 
+// 1) Public fields
+// 2) Private fields
+// 3) Public methods
+// 4) Private methods
+// (there is also the stactic version, by simply addind the word 'static' before declaring the methods)
+
 class Account {
-  // 1. Public fields (instances)
+  // 1. Public fields (added to the instances)
   locale = navigator.language;
 
-  // 2. Private fields
+  // 2. Private fields ('#' makes it private)
   #movements = [];
   #pin;
 
@@ -195,32 +201,35 @@ class Account {
     this.currency = currency;
     this.#pin = pin;
     // underscore is a convention to make properties protected/private
-    // this._movements = [10, 20, 500, 75];
-    this.movements = [10, 20, 500, 75];
     console.log(`Thanks for opening an account, ${this.owner}`);
   }
 
-  // 3. Public methods
-
-  // Public interface
+  // 3. Public methods (are always added to the prototype)
   getMovements() {
     return this.#movements;
   }
 
   deposit(val) {
     this.#movements.push(val);
+    return this;
   }
+
   withdraw(val) {
     this.deposit(-val);
+    return this;
   }
-  _approveLoan(val) {
-    return true;
-  }
+
   requestLoan(val) {
     if (this._approveLoan(val)) {
       this.deposit(val);
       console.log(`Loan of ${this.val} approved`);
+      return this;
     }
+  }
+
+  // 4) Private methods (do not appear in the prototype, only in the instances)
+  _approveLoan(val) {
+    return true;
   }
 }
 
@@ -230,4 +239,9 @@ acc1.deposit(55);
 acc1.withdraw(250);
 acc1.requestLoan(6000);
 console.log(acc1);
+console.log(acc1.getMovements());
+console.log(acc1._approveLoan(100));
+
+// Chaining
+acc1.deposit(500).deposit(240).withdraw(320).requestLoan(25000).withdraw(3800);
 console.log(acc1.getMovements());
