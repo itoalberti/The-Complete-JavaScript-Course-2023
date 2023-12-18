@@ -1,8 +1,52 @@
 'use strict';
 
 // prettier-ignore
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+class Workout {
+  date = new Date();
+  id = (Date.now() + '').slice(-10);
+  constructor(coords, distance, duration) {
+    // this.date =...
+    // this.id =...
+    this.coords = coords;
+    this.distance = distance;
+    this.duration = duration;
+  }
+}
+
+class Running extends Workout {
+  constructor(coords, distance, duration, cadence) {
+    super(coords, distance, duration);
+    this.cadence = cadence;
+    this.calcPace();
+  }
+
+  calcPace() {
+    // min/km
+    this.pace = this.duration / this.distance;
+    return this.pace;
+  }
+}
+class Cycling extends Workout {
+  constructor(coords, distance, duration, elevationGain) {
+    super(coords, distance, duration);
+    this.elevationGain = elevationGain;
+    this.calcSpeed();
+  }
+
+  calcSpeed() {
+    this.speed = this.distance / (this.duration / 60);
+    return this.speed;
+  }
+}
+
+const run1 = new Running([39, -15], 5.2, 26, 186);
+const cycling1 = new Cycling([42, -11], 32, 84, 221);
+console.log(run1);
+console.log(cycling1);
+
+// ######################### APPLICATION ARCHITECTURE #########################
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const form = document.querySelector('.form');
 const containerWorkouts = document.querySelector('.workouts');
 const inputType = document.querySelector('.form__input--type');
@@ -11,25 +55,18 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
-let map, mapEvent;
-
 class App {
   #map;
   #mapEvent;
 
   constructor() {
     this._getPosition();
-
-    form.addEventListener('submit', this._newWorkout);
-
-    inputType.addEventListener('change', function () {
-      inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
-      inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
-    });
+    form.addEventListener('submit', this._newWorkout.bind(this));
+    inputType.addEventListener('change', this._toggleElevationField);
   }
 
   _getPosition() {
-    if (navigator.geolocation) {
+    if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(
         // In case location is provided:
         this._loadMap.bind(this),
@@ -38,17 +75,14 @@ class App {
           alert('Mapty could not get your current position');
         }
       );
-    }
   }
 
   _loadMap(position) {
-    alert('Mapty got your current position');
     const { latitude } = position.coords;
     const { longitude } = position.coords;
+    const coords = [latitude, longitude];
     console.log(latitude, longitude);
     console.log(`https://www.google.com.br/maps/place/${latitude},${longitude}`);
-
-    const coords = [latitude, longitude];
 
     //   leaflet code:
     this.#map = L.map('map').setView(coords, 13); //   setView(coordinates, zoom level)
@@ -59,25 +93,48 @@ class App {
     }).addTo(this.#map);
 
     //   'on' is an event created by the leaflet library
-    this.#map.on('click', function (mapE) {
-      this.#mapEvent = mapE;
-      form.classList.remove('hidden');
-      inputDistance(focus);
-    });
+    this.#map.on('click', this._showForm.bind(this));
   }
 
-  _showForm() {}
+  _showForm(mapE) {
+    this.#mapEvent = mapE;
+    form.classList.remove('hidden');
+    inputDistance.focus();
+  }
 
-  _toggleElevationField() {}
+  //
+  _toggleElevationField() {
+    inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+    inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+  }
 
   _newWorkout(e) {
     console.log(this);
     e.preventDefault();
 
-    inputDistance.value = inputDuration.value = inputCadence.value = inputElevation.value = '';
-    // display marker
-    console.log(this.#mapEvent);
-    const { lat, lng } = mapEvent.latlng;
+    // Get data from form
+    const type = inputType.value;
+    const distance = +inputDistance.value;
+    const duration = +inputDuration.value;
+
+    // If workout is running, create running object
+    if (type === 'running') {
+      const cadence = +inputCadence.value;
+      // Check if data is valid
+      if (!Number.isFinite(distance) || !Number.isFinite(duration) || !Number.isFinite(cadence) || !Number.isFinite(distance)) {
+        return alert('The input must be positive numbers');
+    }
+
+    // If workout is cycling, create cycling object
+    if (type === 'cycling') {
+      const elevation = +inputElevation.value;
+      // Check if data is valid
+    }
+
+    // Add new object to workout array
+
+    // Render workout on map as a marker
+    const { lat, lng } = this.#mapEvent.latlng;
     // creates marker from the coordinates
     L.marker([lat, lng], {
       riseOnHover: true,
@@ -95,8 +152,14 @@ class App {
       )
       .setPopupContent('Workout')
       .openPopup(); // opens the pop-up
+
+    // Render workout on list
+
+    // Hide form and clear input fields
+    inputDistance.value = inputDuration.value = inputCadence.value = inputElevation.value = '';
+    // display marker
+    console.log(this.#mapEvent);
   }
 }
 
 const app = new App();
-app._getPosition();
