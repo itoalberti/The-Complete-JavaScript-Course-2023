@@ -14,6 +14,7 @@ class Workout {
   }
 }
 
+// +++++++++++++++++++++++++ RUNNING +++++++++++++++++++++++++
 class Running extends Workout {
   constructor(coords, distance, duration, cadence) {
     super(coords, distance, duration);
@@ -27,6 +28,8 @@ class Running extends Workout {
     return this.pace;
   }
 }
+
+// +++++++++++++++++++++++++ CYCLING +++++++++++++++++++++++++
 class Cycling extends Workout {
   constructor(coords, distance, duration, elevationGain) {
     super(coords, distance, duration);
@@ -102,13 +105,16 @@ class App {
     inputDistance.focus();
   }
 
-  //
   _toggleElevationField() {
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
   }
 
   _newWorkout(e) {
+    const validInputs = (...inputs) =>
+      // every: function checks if every 'inp' satisfies the condition. If yes, returns true. If not, false.
+      inputs.every((inp) => Number.isFinite(inp) && Number(inp) > 0);
+
     console.log(this);
     e.preventDefault();
 
@@ -121,14 +127,26 @@ class App {
     if (type === 'running') {
       const cadence = +inputCadence.value;
       // Check if data is valid
-      if (!Number.isFinite(distance) || !Number.isFinite(duration) || !Number.isFinite(cadence) || !Number.isFinite(distance)) {
-        return alert('The input must be positive numbers');
+      if (
+        // !Number.isFinite(distance) ||
+        // !Number.isFinite(duration) ||
+        // !Number.isFinite(cadence))
+        !validInputs(distance, duration, cadence)
+      )
+        return alert('All inputs must be positive numbers');
     }
 
     // If workout is cycling, create cycling object
     if (type === 'cycling') {
       const elevation = +inputElevation.value;
       // Check if data is valid
+      if (
+        // !Number.isFinite(distance) ||
+        // !Number.isFinite(duration) ||
+        // !Number.isFinite(elevationGain))
+        !validInputs(distance, duration, elevation)
+      )
+        return alert('All inputs must be positive numbers');
     }
 
     // Add new object to workout array
