@@ -185,6 +185,8 @@ class App {
     // Creates a local storage for all workouts
     this._setLocalStorage();
 
+    this.reset();
+
     // Display marker
     console.log(this.#mapEvent);
   }
