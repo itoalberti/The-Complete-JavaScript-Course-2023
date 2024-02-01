@@ -23,7 +23,6 @@ class Workout {
   }
 }
 
-// tests
 // +++++++++++++++++++++++++ RUNNING +++++++++++++++++++++++++
 class Running extends Workout {
   type = 'running';
@@ -185,7 +184,7 @@ class App {
     // Creates a local storage for all workouts
     this._setLocalStorage();
 
-    this.reset();
+    // this.reset();
 
     // Display marker
     console.log(this.#mapEvent);
@@ -255,7 +254,13 @@ class App {
     form.insertAdjacentHTML('afterend', html);
   }
 
+  _deleteWorkout() {
+    localStorage.removeItem('workout');
+  }
+
   _moveToPopup(e) {
+    if (!this.#map) return;
+
     const workoutEl = e.target.closest('.workout');
     if (!workoutEl) return;
 
