@@ -254,10 +254,6 @@ class App {
     form.insertAdjacentHTML('afterend', html);
   }
 
-  _deleteWorkout() {
-    localStorage.removeItem('workout');
-  }
-
   _moveToPopup(e) {
     if (!this.#map) return;
 
@@ -284,6 +280,8 @@ class App {
       this._renderWorkout(work);
     });
   }
+
+  _deleteAllWorkouts() {}
 
   reset() {
     localStorage.removeItem('workouts');
