@@ -32,18 +32,30 @@
 // GOOD LUCK 😃
 
 const btn = document.querySelector('.btn-coords');
+const counstriesContainer = document.querySelector('.countries');
+const latInput = document.getElementById('lat');
+const lngInput = document.getElementById('lng');
 
 const whereAmI = function (lat, lng) {
-  //   fetch(`https://geocode.xyz/${lat},${lng}?geoit=xml`).then
-  fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`)
+  fetch(`https://geocode.xyz/${lat},${lng}?geoit=json&auth=YOUR_ACCESS_KEY`)
+    // or use alternative api.bigdatacloud.net (it has an quota on the requests you can make)
+    // fetch(`https://api.bigdatacloud.net/data/reverse-geocode?latitude=${lat}&longitude=${lng}&localityLanguage=en`)
     .then((resp) => resp.json())
     .then((data) => {
-      alert(`You are in ${data.city}, ${data.countryName}.`);
+      if (data.city == 'undefined' && data.country == 'undefined') {
+      }
+      alert(`You are in ${data.city}, ${data.country}.`);
       console.log('Location:');
       console.log(data);
+      return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
     })
-    .catch((error) => {
-      console.error(`Error locating user:`, error);
+    .then((resp) => {
+      if (!resp.ok) throw new Error(`Country not found (${resp.status})`);
+      return resp.json();
+    })
+    .then((data) => renderCountry(data[0]))
+    .catch((err) => {
+      console.error(`Error locating user:`, err);
     });
 };
 
@@ -67,5 +79,8 @@ const renderCountry = function (data, className = '') {
 };
 
 btn.addEventListener('click', function () {
-  whereAmI(-33.933, 18.474);
+  const lat = parseFloat(latInput.value);
+  const lng = parseFloat(lngInput.value);
+  whereAmI(lat, lng);
+  // whereAmI(-33.933, 18.474);
 });
