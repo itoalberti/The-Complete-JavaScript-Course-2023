@@ -61,6 +61,11 @@ const getCountryData = function (country) {
     .finally(() => {});
 };
 
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
 // const getCountryAndNeighbour = function (country) {
 //   // AJAX call country 1
 //   const req = new XMLHttpRequest();
@@ -95,6 +100,22 @@ const getCountryData = function (country) {
 //   req.open('GET', `https://restcountries.com/v3.1/name/${country}`);
 // req.send();
 
+const whereAmI = async function (country) {
+  // Geolocation
+  const pos = await getPosition();
+  console.log('pos:', pos);
+  const { latitude: lat, longitude: lng } = pos.coords;
+
+  // fetch(`https://restcountries.com/v3.1/name/${country}`);
+  const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+  console.log('resGeo: ', resGeo);
+  const dataGeo = await resGeo.json();
+  console.log('dataGeo:');
+  console.log(dataGeo);
+};
+
 btn.addEventListener('click', function () {
-  getCountryData(`brazil`);
+  getCountryData(`peru`);
 });
+
+whereAmI();
