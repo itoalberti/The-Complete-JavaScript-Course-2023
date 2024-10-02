@@ -100,22 +100,86 @@ const getPosition = function () {
 //   req.open('GET', `https://restcountries.com/v3.1/name/${country}`);
 // req.send();
 
-const whereAmI = async function (country) {
-  // Geolocation
-  const pos = await getPosition();
-  console.log('pos:', pos);
-  const { latitude: lat, longitude: lng } = pos.coords;
+// const whereAmI = async function (country) {
+//   // Geolocation
+//   const pos = await getPosition();
+//   console.log('pos:', pos);
+//   const { latitude: lat, longitude: lng } = pos.coords;
 
-  // fetch(`https://restcountries.com/v3.1/name/${country}`);
-  const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
-  console.log('resGeo: ', resGeo);
-  const dataGeo = await resGeo.json();
-  console.log('dataGeo:');
-  console.log(dataGeo);
+//   fetch(`https://restcountries.com/v3.1/name/${country}`).then((res) => console.log(res));
+//   // const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+
+//   console.log('resGeo: ', resGeo);
+//   const dataGeo = await resGeo.json();
+//   console.log('dataGeo:');
+//   console.log(dataGeo);
+// };
+
+const whereAmI = async function () {
+  try {
+    // geolocation
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    const dataGeo = await resGeo.json();
+    console.log('dataGeo:', dataGeo);
+    console.log('Your location is:', dataGeo.country);
+
+    // country data
+    const res = await fetch(`https://restcountries.com/v3.1/name/${dataGeo.country}`);
+    const data = await res.json();
+    // const data = await res.json();
+    console.log('data:', data);
+    renderCountry(data[0]);
+  } catch (err) {
+    console.error(err);
+    renderError(`Something went wrong: ${err.message}`);
+  }
 };
 
 btn.addEventListener('click', function () {
-  getCountryData(`peru`);
+  whereAmI();
 });
 
-whereAmI();
+const get3countries = async function (c1, c2, c3) {
+  try {
+    // This form of code yields the 3 promises being solved one right after the other:
+    // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+    // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+    // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+    // console.log([data1.capital, data2.capital, data3.capital]);
+
+    // This form of code makes all 3 promises be solved at once, saving time:
+    const data = await Promise.all([getJSON(`https://restcountries.com/v3.1/name/${c1}`), getJSON(`https://restcountries.com/v3.1/name/${c2}`), getJSON(`https://restcountries.com/v3.1/name/${c3}`)]);
+    console.log(data.map((d) => d[0].capital));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+get3countries('poland', 'namibia', 'mongolia');
+
+// ---- Promise.race → takes in an array of promises and returns the result of the first resolved promise (be it rejected or fulfilled)
+(async function () {
+  const res = await Promise.race([getJSON(`https://restcountries.com/v3.1/name/egypt`), getJSON(`https://restcountries.com/v3.1/name/denmark`), getJSON(`https://restcountries.com/v3.1/name/australia`)]);
+  console.log(`Promise.race() result:`);
+  console.log(res[0].name.common);
+})();
+// ---- Promise.any → similar to Promise.race, but ignores rejected promises
+
+const timeout = function (time) {
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error('Request took too long'));
+    }, time * 1000);
+  });
+};
+
+Promise.race([getJSON('https://restcountries.com/v3.1/name/germany'), timeout(0.5)])
+  .then((res) => console.log('Promise.race between timeout and getJSON:', res[0]))
+  .catch((err) => console.error(err));
+
+// ----------- Promise.allSettled → returns an array of all the promises, rejected or resolved
+Promise.allSettled([Promise.resolve('Success 1'), Promise.reject('Error'), Promise.resolve('Success 2')]).then((res) => console.log(res));
