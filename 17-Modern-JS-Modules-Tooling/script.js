@@ -16,7 +16,7 @@ const getLastPost = async function () {
   return { title: data.at(-1).title, post: data.at(-1).body };
 };
 
-const lastPost = await getLastPost();
+const lastPost = getLastPost();
 console.log(lastPost);
 
 const shoppingCart = (function () {
@@ -49,4 +49,20 @@ shoppingCart.addToCart(87, 'banana');
 console.log(shoppingCart);
 console.log(shoppingCart.shipping);
 
-import { cloneDeep } from 'lodash-es';
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+
+const state = {
+  cart: [
+    { product: 'watermelon', quantity: 8 },
+    { product: 'package of jellybeans', quantity: 7 },
+  ],
+  user: { loggedIn: true },
+};
+const stateClone = Object.assign({}, state);
+console.log('stateClone:', stateClone);
+const stateCloneDeep = cloneDeep(state);
+console.log('stateCloneDeep:', stateCloneDeep);
+
+state.user.loggedIn = false;
+console.log('stateClone:', stateClone);
+console.log('stateCloneDeep:', stateCloneDeep);
