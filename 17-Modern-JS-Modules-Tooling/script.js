@@ -48,3 +48,5 @@ shoppingCart.addToCart(18, 'apple');
 shoppingCart.addToCart(87, 'banana');
 console.log(shoppingCart);
 console.log(shoppingCart.shipping);
+
+import { cloneDeep } from 'lodash-es';
