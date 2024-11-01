@@ -6,18 +6,21 @@
     "start": "parcel index.html",
     "build": "parcel build index.html"
   },
-  "author": "Mauricio Sanches Alberti",
+  "author": "Maurício Alberti",
   "license": "ISC",
+  "dependencies": {
+    "core-js": "^3.38.1",
+    "fractional": "^1.0.0",
+    "parcel": "^2.12.0",
+    "regenerator-runtime": "^0.14.1",
+    "sass": "^1.80.4"
+  },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.12.0",
     "buffer": "^6.0.3",
     "events": "^3.3.0",
-    "parcel": "^2.12.0",
     "process": "^0.11.10",
     "stream-browserify": "^3.0.0",
     "util": "^0.12.5"
-  },
-  "dependencies": {
-    "sass": "^1.79.5"
   }
 }
