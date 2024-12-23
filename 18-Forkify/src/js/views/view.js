@@ -3,13 +3,43 @@ import icons from 'url:../../img/icons.svg';
 export default class View {
   _data;
 
-  render(data) {
+  render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
     this._data = data;
     const markup = this._generateMarkup();
+
+    if (!render) return markup;
+
     this._clear();
     this._parentEl.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  update(data) {
+    this._data = data;
+    const newMarkup = this._generateMarkup();
+
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    const newElements = Array.from(newDOM.querySelectorAll('*'));
+    const currElements = Array.from(this._parentEl.querySelectorAll('*'));
+
+    newElements.forEach((newEl, i) => {
+      const currEl = currElements[i];
+      // console.log(newEl.isEqualNode(currEl));
+
+      if (
+        !newEl.isEqualNode(currEl) &&
+        newEl.firstChild?.nodeValue.trim() !== ''
+      ) {
+        currEl.textContent = newEl.textContent;
+      }
+
+      // Updates changed attributes
+      if (!newEl.isEqualNode(currEl))
+        Array.from(newEl.attributes).forEach(attr =>
+          currEl.setAttribute(attr.name, attr.value)
+        );
+    });
   }
 
   _clear() {
@@ -44,7 +74,7 @@ export default class View {
     this._parentEl.insertAdjacentHTML('afterbegin', markup);
   }
 
-  renderMessage(message = this._successMessage) {
+  renderMessage(message = this._message) {
     const markup = `
     <div class="message">
       <div>

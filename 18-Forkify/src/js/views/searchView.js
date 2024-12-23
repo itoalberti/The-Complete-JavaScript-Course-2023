@@ -1,3 +1,4 @@
+// CHECKED - OK
 class SearchView {
   _parentEl = document.querySelector('.search');
 
