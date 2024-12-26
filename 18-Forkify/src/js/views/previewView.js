@@ -1,4 +1,4 @@
-// CHECKED - OK
+// check ok
 import icons from '../../img/icons.svg';
 import View from './view.js';
 

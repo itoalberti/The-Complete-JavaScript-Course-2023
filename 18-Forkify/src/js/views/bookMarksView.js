@@ -1,5 +1,4 @@
-// CHECKED - OK
-import icons from '../../img/icons.svg';
+// check ok
 import previewView from './previewView.js';
 import View from './view.js';
 

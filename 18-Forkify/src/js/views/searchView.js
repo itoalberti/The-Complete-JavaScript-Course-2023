@@ -1,4 +1,4 @@
-// CHECKED - OK
+// check ok
 class SearchView {
   _parentEl = document.querySelector('.search');
 
@@ -9,7 +9,7 @@ class SearchView {
   }
 
   _clearInput() {
-    return (this._parentEl.querySelector('.search__field').value = '');
+    this._parentEl.querySelector('.search__field').value = '';
   }
 
   addHandlerSearch(handler) {

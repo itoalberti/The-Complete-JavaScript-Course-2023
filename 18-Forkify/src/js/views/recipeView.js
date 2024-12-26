@@ -1,6 +1,4 @@
-// CHECKED - OK
-// import icons from '../img/icons.svg'; //--->> Parcel 1
-// import icons from 'url:../img/icons.svg'; // ---> Parcel 2
+// check - ok
 import icons from 'url:../../img/icons.svg';
 import View from './view.js';
 import { Fraction } from 'fractional';
@@ -131,8 +129,7 @@ class RecipeView extends View {
       </svg>
       <div class="recipe__quantity">${
         ing.quantity ? new Fraction(ing.quantity).toString() : ''
-      }
-        </div>
+      }</div>
       <div class="recipe__description">
         <span class="recipe__unit">${ing.unit}</span>
         ${ing.description}

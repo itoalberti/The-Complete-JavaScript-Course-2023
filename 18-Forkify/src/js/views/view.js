@@ -1,3 +1,4 @@
+// check ok
 import icons from 'url:../../img/icons.svg';
 
 export default class View {
@@ -25,7 +26,6 @@ export default class View {
 
     newElements.forEach((newEl, i) => {
       const currEl = currElements[i];
-      // console.log(newEl.isEqualNode(currEl));
 
       if (
         !newEl.isEqualNode(currEl) &&
