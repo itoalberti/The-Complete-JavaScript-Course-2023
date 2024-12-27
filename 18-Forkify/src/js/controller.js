@@ -127,9 +127,9 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
   addRecipeView.addHandlerUpload(controlAddRecipe);
-  newFeature();
   console.log('Testing git commit');
+  console.log('Testing deploy in Netlify');
+  newFeature();
 };
 
 init();
-console.log('Testing deploy in Netlify');
