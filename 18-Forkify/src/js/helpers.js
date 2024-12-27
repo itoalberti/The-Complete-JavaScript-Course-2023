@@ -1,4 +1,3 @@
-// check ok
 import { async } from 'regenerator-runtime';
 import { TIMEOUT_SEC } from './config.js';
 

@@ -1,4 +1,3 @@
-// check ok
 import { async } from 'regenerator-runtime';
 import { API_URL, KEY, RESULTS_PER_PAGE } from './config.js';
 import { AJAX } from './helpers.js';
