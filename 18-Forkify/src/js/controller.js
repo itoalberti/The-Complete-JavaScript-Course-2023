@@ -132,3 +132,4 @@ const init = function () {
 };
 
 init();
+console.log('Testing deploy in Netlify');
